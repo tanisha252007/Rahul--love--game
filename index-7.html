@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fff0f5">
+<title>A tiny surprise for Rahul ♡</title>
+<style>
+:root{--pink:#f7a9c4;--deep:#b83d70;--cream:#fffaf7;--ink:#5d3444;--soft:#ffe0eb}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#fff 0,#fff0f5 55%,#ffe4ed 100%);color:var(--ink);font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif;overflow-x:hidden}
+main{width:min(720px,92%);margin:0 auto;padding:28px 0 44px;position:relative}
+.top{text-align:center;font-size:.9rem;letter-spacing:.08em;color:#b96b88}
+.card{background:#ffffffd9;border:2px solid #f9c9d9;border-radius:28px;padding:clamp(20px,5vw,38px);box-shadow:0 12px 35px #d66b8a20;text-align:center;margin:18px 0}
+h1{font-size:clamp(2.1rem,8vw,4rem);line-height:1.04;margin:8px 0 14px;color:var(--deep)}
+h2{font-size:1.55rem;margin:0 0 12px;color:var(--deep)}
+p{line-height:1.65}
+.subtitle{font-size:1.08rem}
+.bear{font-size:4.5rem;animation:bob 2s ease-in-out infinite;display:block}
+@keyframes bob{50%{transform:translateY(-7px) rotate(3deg)}}
+button{border:0;border-radius:999px;background:var(--deep);color:white;font:inherit;font-weight:750;padding:13px 20px;margin:6px;cursor:pointer;box-shadow:0 5px 0 #86284f;transition:transform .15s}
+button:hover{transform:translateY(-2px)}
+button:active{transform:translateY(2px);box-shadow:0 2px 0 #86284f}
+button.secondary{background:#ffe0eb;color:#9c315d;box-shadow:0 5px 0 #e9a9c0}
+.hidden{display:none!important}
+.progress{height:8px;background:#ffe0eb;border-radius:99px;overflow:hidden;margin:18px 0}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#f6a0be,#bc4a78);transition:width .3s}
+.choices{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0}
+.choice{background:#fff0f5;color:#96365c;box-shadow:0 4px 0 #edbfd0}
+.note{background:#fff5f8;border:1px dashed #e9a1bb;border-radius:18px;padding:18px;text-align:left;white-space:pre-line}
+.big-heart{font-size:3rem;color:#d84f82;animation:pulse 1s infinite alternate}
+@keyframes pulse{to{transform:scale(1.14)}}
+footer{text-align:center;color:#b96b88;font-size:.9rem;padding:8px}
+.float{position:fixed;bottom:-30px;pointer-events:none;animation:rise 5s linear forwards;z-index:5}
+@keyframes rise{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+.tiny{font-size:.86rem;color:#9b6b7d}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">♡ A LITTLE WEBSITE MADE WITH LOVE ♡</div>
+  <section class="card" id="intro">
+    <span class="bear">🧸💗</span>
+    <h1>Hey, Rahul!</h1>
+    <p class="subtitle">Someone has a tiny surprise for you…</p>
+    <p>Ready to unlock it, bbyyy?</p>
+    <button id="start">Start our little game ♡</button>
+    <p class="tiny">Psst… keep going until you reach the last surprise.</p>
+  </section>
+
+  <section class="card hidden" id="game">
+    <p class="tiny" id="stepLabel">LEVEL 1 OF 3</p>
+    <div class="progress"><span id="bar"></span></div>
+    <h2 id="question">A very important question…</h2>
+    <p id="hint">Choose the answer you think is right!</p>
+    <div class="choices" id="choices"></div>
+    <p class="tiny" id="feedback" aria-live="polite"></p>
+  </section>
+
+  <section class="card hidden" id="secret">
+    <span class="big-heart">♡</span>
+    <h2>Your secret message</h2>
+    <div class="note" id="letter">I love you so much bbyyy You're my favourite person. No matter what happens, I'm always going to be grateful that I have you. ❤️</div>
+    <p>Thank you for being you, Rahul. You make my world a little softer and so much brighter. 🧸</p>
+    <button id="more">One last thing…</button>
+  </section>
+
+  <section class="card hidden" id="ending">
+    <span class="bear">🐻‍❄️💌</span>
+    <h1>I love you, Rahul.</h1>
+    <p class="subtitle">Today, tomorrow, and in all the little moments in between. ❤️</p>
+    <p>You are my favourite notification, my favourite person, and a very special part of my life.</p>
+    <button id="hearts">Send you a million hearts 💗</button>
+    <p class="tiny" id="heartMessage" aria-live="polite"></p>
+    <button class="secondary" id="again">Play again ↻</button>
+  </section>
+  <footer>made with all my heart ♡ just for Rahul</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const levels = [
+ {q:"What is Rahul to me?", hint:"Pick the most obvious answer 😌", options:["Just some guy","My favourite person 💗","My maths teacher"], correct:1, yes:"Obviouslyyyy 🥹💗"},
+ {q:"What do you unlock by being this cute?", hint:"Think with your heart, bbyyy.", options:["A secret message 💌","A homework assignment","A lecture"], correct:0, yes:"Correct! The surprise is getting closer 🎀"},
+ {q:"One last question…", hint:"Choose wisely, mister 👀", options:["More hugs (virtually) 🧸","More love ❤️","BOTH, obviously!!"], correct:2, yes:"YOU GOT ITTT 😭❤️"}
+];
+let level=0;
+function show(id){["intro","game","secret","ending"].forEach(x=>$(x).classList.toggle("hidden",x!==id))}
+function renderLevel(){
+ const l=levels[level]; $("stepLabel").textContent=`LEVEL ${level+1} OF ${levels.length}`;
+ $("bar").style.width=`${level/levels.length*100}%`; $("question").textContent=l.q;
+ $("hint").textContent=l.hint; $("feedback").textContent="";
+ const box=$("choices"); box.innerHTML="";
+ l.options.forEach((option,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=option;b.onclick=()=>{
+   if(i===l.correct){$("feedback").textContent=l.yes;box.querySelectorAll("button").forEach(x=>x.disabled=true);setTimeout(()=>{level++;if(level<levels.length)renderLevel();else{show("secret");$("bar").style.width="100%"}},650)}
+   else{$("feedback").textContent="Hehe, try again bbyyy 🥹💗"}
+ };box.appendChild(b)});
+}
+$("start").onclick=()=>{level=0;show("game");renderLevel()};
+$("more").onclick=()=>show("ending");
+$("again").onclick=()=>{level=0;show("intro")};
+$("hearts").onclick=()=>{for(let i=0;i<24;i++)setTimeout(()=>{const h=document.createElement("span");h.className="float";h.textContent=["💗","💖","💕","❤️","🧸"][Math.floor(Math.random()*5)];h.style.left=Math.random()*96+"vw";h.style.fontSize=(18+Math.random()*22)+"px";document.body.appendChild(h);setTimeout(()=>h.remove(),5100)},i*75);$("heartMessage").textContent="A whole sky full of love, just for you, Rahul! 💗"};
+</script>
+</body>
+</html>
